@@ -1,0 +1,55 @@
+<odoo>
+    <template id="kramer_searchbar" name="Kramer Smart Search">
+        <section class="s_searchbar kramer_searchbar o_colored_level o_cc o_cc2 pt48 pb48">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <h2>Kramer</h2>
+                        <t t-snippet-call="smart_search.kramer_website_search_box"/>
+                        <div class="mt-4 text-center">
+                            <div class="spinner-border text-primary kramer-spinner d-none" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div id="product-list" class="bg-white px-2 py-1 rounded-3"/>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </template>
+
+
+    <template id="kramer_website_search_box" name="Kramer Website Searchbox">
+        <div t-attf-class="input-group #{_classes}" role="search">
+            <t t-set="search_placeholder">Search...</t>
+            <input type="search"
+                   name="search"
+                   class="form-control oe_search_box karamer_input_search"
+                   t-att-placeholder="placeholder if placeholder else search_placeholder"
+                   t-att-value="search"/>
+            <button type="submit"
+                    t-att-class="'btn oe_search_button %s' % (_submit_classes or 'btn-primary')"
+                    aria-label="Search"
+                    title="Search">
+                <i class="oi oi-search"/>
+                <span t-if="search" class="oe_search_found">
+                    <small>(
+                        <t t-out="search_count or 0"/>
+                        found)
+                    </small>
+                </span>
+            </button>
+        </div>
+    </template>
+
+    <template id="kramer_smart_snippets" inherit_id="website.snippets" name="Kramer Smart Search" priority="8">
+        <xpath expr="//div[@id='snippet_effect']//t[@t-snippet][last()]" position="after">
+            <t t-snippet="smart_search.kramer_searchbar">
+                <keywords>kramer,smart, search</keywords>
+            </t>
+        </xpath>
+    </template>
+
+
+</odoo>
