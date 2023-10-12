@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <template id="kramer_search_page" inherit_id="website.list_hybrid">
+        <xpath expr="//t[@t-call='website.website_search_box_input']">
+            <t t-set="_classes" t-valuef="mt8"/>
+            <t t-set="search_type" t-valuef=""/>
+            <t t-set="action" t-valuef="/website/snippet/kramer/search"/>
+        </xpath>
+
+        <xpath expr="//div[@class='table-responsive']" position="replace">
+            <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap" t-foreach="results"
+               t-as="result">
+                <div class="d-flex align-items-center o_search_result_item">
+                    <img t-if="result.get('image_url')" t-att-src="result.get('image_url')"
+                         class="flex-shrink-0 o_image_64_contain"/>
+                    <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')"
+                       style="font-size: 34px;"/>
+                    <div class="o_search_result_item_detail px-3">
+                        <div t-att-class="'h6 fw-bold %s' % ('' if description else 'mb-0')" t-out="result['name']"/>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <t t-if="result.get('list_price')">
+                            <strong>$</strong>
+                            <strong t-out="result.get('list_price')"/>
+                        </t>
+                    </div>
+                </div>
+            </a>
+        </xpath>
+    </template>
+
+
+</odoo>
