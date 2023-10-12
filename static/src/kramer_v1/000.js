@@ -9,49 +9,43 @@ publicWidget.registry.KramerSearch = publicWidget.Widget.extend({
     events: {
         // 'input .karamer_input_search': 'onChangeInput',
         'keydown .karamer_input_search': 'onHandleKeydown',
+        'input .karamer_input_search': 'onHandleInput',
+        'click .submit-button': 'onHandleClickSubmit',
+        // 'click .link-button': 'onHandleRedirect',
 
     },
     start: function () {
         this.kramerSpinner = this.el.querySelector('.kramer-spinner')
+        this.searchText = ''
     },
 
 
     async onHandleKeydown(evt) {
-        const value = evt.target.value
+        const value = evt.target.value.trim()
+        this.searchText = value
         if (evt.keyCode === 13) {
-            this.toggleSpinner('show')
-            try {
-                await this.getProductData(value)
-                this.toggleSpinner('hidden')
-            } catch (e) {
-                this.toggleSpinner('hidden')
-            }
-
-
+            evt.preventDefault()
+            await this.getProductData(value)
         }
     },
 
-    async getProductData(value) {
-        const data = await this._rpc({
-            route: '/website/snippet/kramer/smart-search',
-            params: {
-                'term': value,
-            }
-        })
-        console.log("DATA", data[0])
-        await this.renderData(data)
+
+    async onHandleInput(evt) {
+        this.searchText = evt.target.value.trim()
     },
 
-    async renderData(products) {
+    async onHandleClickSubmit(evt) {
+        evt.preventDefault()
+        await this.getProductData(this.searchText)
+
+    },
+
+
+    async renderData(data) {
         let html = ''
         const container = this.el.querySelector("#product-list")
-        /**
-         * Todo: obtner la url del producto
-         * Todo: obtener la imagen del producto
-         *
-         *
-         *
-         * **/
+        const sqlContainer = this.el.querySelector("#show-sql")
+        const {products, sql_ai} = data
         products.forEach(product => {
             html += `<a class="dropdown-item p-2 text-wrap" href="${product.website_url}">
                             <div class="d-flex align-items-center o_search_result_item">
@@ -77,47 +71,35 @@ publicWidget.registry.KramerSearch = publicWidget.Widget.extend({
                         </a>`
         })
         container.innerHTML = html
-
+        sqlContainer.innerHTML = sql_ai
 
     },
 
 
-    _removeAllChildNodes(parent) {
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
+    async searchProductData(value) {
+        const data = await this._rpc({
+            route: '/website/snippet/kramer/smart-search',
+            params: {
+                'term': value,
+            }
+        })
+        console.log("DATA", data)
+        await this.renderData(data)
+    },
+
+    async getProductData(value) {
+        this.toggleSpinner('show')
+        try {
+            await this.searchProductData(value)
+            this.toggleSpinner('hidden')
+        } catch (e) {
+            this.toggleSpinner('hidden')
         }
     },
 
     toggleSpinner(action) {
         this.kramerSpinner.classList.toggle('d-none')
-
-
     }
-
-    //
-    // _onInput(evt) {
-    //     this.term = evt.target.value
-    // },
-
-    // async _onKeydown(evt) {
-    //     if (evt.which === 13) {
-    //         await this._fetch()
-    //     }
-    //
-    // },
-
-    // async _fetch() {
-    //     console.log("SSSSSSSSSSSSSSSSSS")
-    //     // const res = await this._rpc({
-    //     //     route: '/website/snippet/kramer/smart-search',
-    //     //     params: {
-    //     //
-    //     //     },
-    //     // })
-    //
-    //     // console.log("RESPONSE", res)
-    // }
-
 });
 
 export default publicWidget.registry.KramerSearch;
