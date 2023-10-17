@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="kramer_shop" inherit_id="website_sale.products">
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='example_field']" position="replace">
+                    <field name="example_field2"/>
+                </xpath>
+                <xpath expr="//field[@name='example_field']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+            </field>
+        </template>
+</odoo>
