@@ -7,6 +7,7 @@ from langchain.chains import create_sql_query_chain
 from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 
@@ -16,12 +17,10 @@ class SmartSearch(models.Model):
 
     @api.model
     def query_with_params(self, question, *args, **kwargs):
-        print("METHOD START")
         list_of_ids = []
 
         # SOTO METHOD
         sql_string = self.get_ai_query(question)
-        print("SQL_STRING SOTO", sql_string)
         sql_string_formatted = self.convert_string(sql_string)
         # END SOTO METHOD
 
@@ -32,7 +31,6 @@ class SmartSearch(models.Model):
             list_of_ids.append(res['id'])
 
         return list_of_ids, sql_string_formatted
-
 
     def convert_string(self, sql_string):
         select_clause = re.search(r'SELECT(.+?)FROM', sql_string, flags=re.IGNORECASE | re.DOTALL)
@@ -58,7 +56,6 @@ class SmartSearch(models.Model):
         sql_resul = f"SELECT id, {select_part} FROM product_template WHERE {where_part} LIMIT 20"
 
         return sql_resul
-
 
     def get_ai_query(self, question):
         db = SQLDatabase.from_uri(
@@ -102,4 +99,4 @@ class SmartSearch(models.Model):
 
             return actions
 
-        # Todo: execute query and return the records
+
