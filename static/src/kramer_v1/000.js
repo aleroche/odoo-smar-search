@@ -16,6 +16,7 @@ publicWidget.registry.KramerSearch = publicWidget.Widget.extend({
     },
     start: function () {
         this.kramerSpinner = this.el.querySelector('.kramer-spinner')
+        this.productContainer = document.getElementsByClassName('product-container')
         this.searchText = ''
     },
 
@@ -83,22 +84,39 @@ publicWidget.registry.KramerSearch = publicWidget.Widget.extend({
                 'term': value,
             }
         })
-        console.log("DATA", data)
+
         await this.renderData(data)
     },
 
     async getProductData(value) {
         this.toggleSpinner('show')
+        this.toggleContainer('hidden')
         try {
             await this.searchProductData(value)
             this.toggleSpinner('hidden')
+            this.toggleContainer('show')
         } catch (e) {
             this.toggleSpinner('hidden')
+            this.toggleContainer('hidden')
         }
     },
 
     toggleSpinner(action) {
         this.kramerSpinner.classList.toggle('d-none')
+    },
+
+    toggleContainer(action) {
+        console.log("Action", action)
+        const productList = Object.values(this.productContainer)
+        if (action === 'hidden') {
+            productList.map(pc => {
+                pc.classList.add('d-none')
+            })
+        } else {
+            productList.map(pc => {
+                pc.classList.remove('d-none')
+            })
+        }
     }
 });
 
