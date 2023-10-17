@@ -20,7 +20,10 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': [
+        'base',
+        'website_sale'
+    ],
 
     # always loaded
     'data': [
@@ -51,7 +54,6 @@
         'web.assets_frontend': [
             # Kramer_v1
             'smart_search/static/src/kramer_v1/000.js',
-
 
             'smart_search/static/src/s_smart_searchbar/000.js',
             'smart_search/static/src/s_smart_searchbar/options.js',
